@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MANIFOLD.BHLib.Events;
 using Sandbox;
 
@@ -10,6 +11,7 @@ namespace MANIFOLD.BHLib {
             private readonly AttackData attack;
 
             private TimelineSampler<SpawnEvent> spawnSampler;
+            private TimelineSampler<CasterEvent> casterSampler;
 
             public AttackData Attack => attack;
             public float Time => spawnSampler.Time;
@@ -24,7 +26,6 @@ namespace MANIFOLD.BHLib {
 
             public bool Update(float deltaTime) {
                 var spawnEvents = spawnSampler.Read(deltaTime);
-
                 foreach (var evt in spawnEvents) {
                     float timePassed = spawnSampler.Time - evt.Time;
                     if (evt is SpawnEntity entEvt) {
@@ -34,7 +35,14 @@ namespace MANIFOLD.BHLib {
                     }
                 }
 
-                return spawnSampler.Time >= attack.CalculatedDuration;
+                var casterEvents = casterSampler.Read(deltaTime);
+                foreach (var evt in casterEvents) {
+                    foreach (IEventListener listener in caster.listeners) {
+                        listener.OnCasterEvent(evt);
+                    }
+                }
+
+                return spawnSampler.Time >= attack.Duration;
             }
         }
         
@@ -51,6 +59,7 @@ namespace MANIFOLD.BHLib {
         }
 
         private List<Instance> instances;
+        private IEventListener[] listeners;
         private GameObject gameObjTarget;
         
         // PREVIEW
@@ -68,6 +77,7 @@ namespace MANIFOLD.BHLib {
 
         protected override void OnAwake() {
             instances = new List<Instance>();
+            listeners = GetComponents<IEventListener>().ToArray();
         }
 
         protected override void OnFixedUpdate() {
