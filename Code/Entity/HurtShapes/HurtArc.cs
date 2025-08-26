@@ -14,7 +14,7 @@ namespace MANIFOLD.BHLib.Components {
         public float Thickness { get; set; }
         public float DistanceVelocity { get; set; }
         
-        public override Component Create(GameObject obj) {
+        public override EntityComponent Create(GameObject obj) {
             var comp = obj.AddComponent<HurtArc>();
             comp.Data = this;
             return comp;

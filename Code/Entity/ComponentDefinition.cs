@@ -6,7 +6,7 @@ namespace MANIFOLD.BHLib {
         [Order(-1000)]
         public bool Enabled { get; set; } = true;
         
-        public abstract Component Create(GameObject obj);
+        public abstract EntityComponent Create(GameObject obj);
     }
 
     public abstract class HurtComponentDefinition : ComponentDefinition {

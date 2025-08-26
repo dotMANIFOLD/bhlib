@@ -11,7 +11,7 @@ namespace MANIFOLD.BHLib.Components {
         public bool Global { get; set; }
         public Vector3 Velocity { get; set; }
         
-        public override Component Create(GameObject obj) {
+        public override EntityComponent Create(GameObject obj) {
             var comp = obj.AddComponent<Velocity>();
             comp.Data = this;
             return comp;

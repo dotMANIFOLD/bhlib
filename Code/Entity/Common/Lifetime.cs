@@ -6,7 +6,7 @@ namespace MANIFOLD.BHLib.Components {
     public class LifetimeDefinition : ComponentDefinition {
         public float Duration { get; set; }
         
-        public override Component Create(GameObject obj) {
+        public override EntityComponent Create(GameObject obj) {
             var comp = obj.AddComponent<Lifetime>();
             comp.Data = this;
             return comp;

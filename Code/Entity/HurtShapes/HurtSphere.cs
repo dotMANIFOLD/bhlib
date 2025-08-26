@@ -7,7 +7,7 @@ namespace MANIFOLD.BHLib.Components {
     public class HurtSphereDefintion : HurtComponentDefinition {
         public float Radius { get; set; } = 10;
             
-        public override Component Create(GameObject obj) {
+        public override EntityComponent Create(GameObject obj) {
             var comp = obj.AddComponent<HurtSphere>();
             comp.Data = this;
             return comp;

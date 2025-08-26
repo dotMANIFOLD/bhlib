@@ -7,7 +7,7 @@ namespace MANIFOLD.BHLib.Components {
     public class AngularVelocityDefiniton : ComponentDefinition {
         public Angles Velocity { get; set; }
         
-        public override Component Create(GameObject obj) {
+        public override EntityComponent Create(GameObject obj) {
             var comp = obj.AddComponent<AngularVelocity>();
             comp.Data = this;
             return comp;

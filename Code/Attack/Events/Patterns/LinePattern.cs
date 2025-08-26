@@ -57,6 +57,7 @@ namespace MANIFOLD.BHLib.Events {
                 evt.Hidden = true;
                 evt.Position = distribution[i].pos;
                 evt.Rotation = distribution[i].rot;
+                evt.Data = null;
                 evt.Data = Data;
             }
         }

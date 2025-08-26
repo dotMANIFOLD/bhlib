@@ -273,13 +273,26 @@ namespace MANIFOLD.BHLib.Editor {
         
         // SAVING
         public void SaveAttack() {
-            if (selectedAttack.EmbeddedResource.HasValue) {
-                Log.Warning("Resource is embedded! Can't save directly.");
-                return;
+            foreach (var item in availableTimelines) {
+                item.timeline.Sort();
             }
 
-            var asset = AssetSystem.FindByPath(selectedAttack.ResourcePath);
-            asset.SaveToDisk(selectedAttack);
+            float longestTime = 0;
+            foreach (var item in availableTimelines) {
+                longestTime = MathF.Max(longestTime, item.timeline.Events[^1].Time);
+            }
+            selectedAttack.CalculatedDuration = longestTime;
+
+            AttackData reloadedData;
+            if (!selectedAttack.EmbeddedResource.HasValue) {
+                var asset = AssetSystem.FindByPath(selectedAttack.ResourcePath);
+                asset.SaveToDisk(selectedAttack);
+
+                reloadedData = asset.LoadResource<AttackData>();
+            } else {
+                Log.Warning("Resource is embedded! Can't save directly.");
+                reloadedData = SelectedAttack;
+            }
             
             // RELOAD ALL THE UI BECAUSE FUCK IT
             // SAVING BREAKS A BUNCH OF REFERENCES FOR SOME REASON
@@ -288,7 +301,7 @@ namespace MANIFOLD.BHLib.Editor {
             
             RegularSession();
             
-            SelectedAttack = asset.LoadResource<AttackData>();
+            SelectedAttack = reloadedData;
             SelectedTimeline = availableTimelines[indexCopy].timeline;
             if (idCopy.HasValue) {
                 SelectedEvent = selectedTimeline.GetEvent(idCopy.Value);
