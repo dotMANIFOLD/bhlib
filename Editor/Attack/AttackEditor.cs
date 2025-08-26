@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Editor;
 using MANIFOLD.BHLib;
+using MANIFOLD.BHLib.Components;
 using MANIFOLD.BHLib.Events;
 using Sandbox;
 using Sandbox.UI;
@@ -11,6 +12,7 @@ using Button = Editor.Button;
 using Checkbox = Editor.Checkbox;
 using ControlSheet = Editor.ControlSheet;
 using Label = Editor.Label;
+using Renderer = MANIFOLD.BHLib.Components.Renderer;
 
 namespace MANIFOLD.BHLib.Editor {
     [Dock("Editor", "Attack Editor", "sports_martial_arts")]
@@ -273,16 +275,42 @@ namespace MANIFOLD.BHLib.Editor {
         
         // SAVING
         public void SaveAttack() {
+            // SORT TIMELINES
             foreach (var item in availableTimelines) {
                 item.timeline.Sort();
             }
 
+            // CALCULATE DURATION
             float longestTime = 0;
             foreach (var item in availableTimelines) {
+                if (item.timeline.Events.Count == 0) continue;
                 longestTime = MathF.Max(longestTime, item.timeline.Events[^1].Time);
             }
             selectedAttack.CalculatedDuration = longestTime;
 
+            // GET RENDERER DATA
+            Dictionary<GameObject, AttackData.RendererData> cache = new Dictionary<GameObject, AttackData.RendererData>();
+            foreach (var evt in SelectedAttack.SpawnTimeline.Events) {
+                if (evt is not SpawnEntity ent) continue;
+
+                var renderers = ent.Data.Components
+                    .Where(x => x is RendererDefinition)
+                    .Cast<RendererDefinition>();
+
+                if (renderers.Count() == 0) continue;
+
+                foreach (var renderer in renderers) {
+                    AttackData.RendererData data;
+                    if (!cache.TryGetValue(renderer.Prefab, out data)) {
+                        data = new AttackData.RendererData();
+                        data.Prefab = renderer.Prefab;
+                        cache.Add(renderer.Prefab, data);
+                    }
+                    data.UseCount++;
+                }
+            }
+            SelectedAttack.RenderPoolingData = cache.Values.ToList();
+            
             AttackData reloadedData;
             if (!selectedAttack.EmbeddedResource.HasValue) {
                 var asset = AssetSystem.FindByPath(selectedAttack.ResourcePath);

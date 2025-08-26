@@ -22,6 +22,7 @@ namespace MANIFOLD.BHLib {
                 attack = data;
 
                 spawnSampler = new TimelineSampler<SpawnEvent>(attack.SpawnTimeline);
+                casterSampler = new TimelineSampler<CasterEvent>(attack.CasterTimeline);
             }
 
             public bool Update(float deltaTime) {
@@ -80,6 +81,24 @@ namespace MANIFOLD.BHLib {
             listeners = GetComponents<IEventListener>().ToArray();
         }
 
+        protected override void OnStart() {
+            Dictionary<GameObject, int> cache = new Dictionary<GameObject, int>();
+            foreach (var attack in Attacks) {
+                foreach (var renderer in attack.RenderPoolingData) {
+                    if (cache.TryGetValue(renderer.Prefab, out var capacity)) {
+                        int newCapacity = Math.Max(capacity, renderer.UseCount);
+                        cache[renderer.Prefab] = newCapacity;
+                    } else {
+                        cache.Add(renderer.Prefab, renderer.UseCount);
+                    }
+                }
+            }
+
+            foreach (var pair in cache) {
+                RendererPool.CreatePool(pair.Key, (pair.Value * 1.5f).CeilToInt());
+            }
+        }
+
         protected override void OnFixedUpdate() {
             for (int i = 0; i < instances.Count; i++) {
                 bool finished = instances[i].Update(Time.Delta);
@@ -110,7 +129,6 @@ namespace MANIFOLD.BHLib {
                     inst.SimulateFrame(simulate.Value);
                 }
             }
-            Log.Info("create called");
             return go;
         }
         

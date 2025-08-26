@@ -15,13 +15,20 @@ namespace MANIFOLD.BHLib.Components {
     
     public class Renderer : EntityComponent {
         public RendererDefinition Data { get; set; }
+
+        private GameObject obj;
         
         protected override void OnStart() {
-            base.OnStart();
+            obj = RendererPool.Request(Data.Prefab);
+            obj.LocalTransform = global::Transform.Zero;
+        }
+        
+        protected override void OnDestroy() {
+            RendererPool.Release(obj);
         }
 
-        protected override void OnDestroy() {
-            base.OnDestroy();
+        protected override void OnPreRender() {
+            obj.WorldTransform = WorldTransform;
         }
     }
 }
