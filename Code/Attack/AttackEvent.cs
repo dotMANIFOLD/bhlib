@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Sandbox;
 
 namespace MANIFOLD.BHLib {
+    /// <summary>
+    /// Base class for all events used in attacks.
+    /// </summary>
     public abstract class AttackEvent {
         [Hide]
         public Guid ID { get; set; } = Guid.NewGuid();

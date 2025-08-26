@@ -6,6 +6,7 @@ namespace MANIFOLD.BHLib {
     /// <summary>
     /// Used as a tool in previews.
     /// </summary>
+    [Category(LibraryData.CATEGORY)]
     [Hide]
     public class PreviewEntity : Component, Component.ExecuteInEditor {
         private EntityComponent[] components;

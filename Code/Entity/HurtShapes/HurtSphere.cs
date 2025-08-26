@@ -14,6 +14,12 @@ namespace MANIFOLD.BHLib.Components {
         }
     }
     
+    /// <summary>
+    /// Hurts targets within a sphere.
+    /// </summary>
+    [Category(LibraryData.CATEGORY + "/Hurt Shapes")]
+    [Icon("circle")]
+    [Hide]
     public class HurtSphere : EntityComponent {
         public HurtSphereDefintion Data { get; set; }
 

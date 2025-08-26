@@ -13,6 +13,12 @@ namespace MANIFOLD.BHLib.Components {
         }
     }
     
+    /// <summary>
+    /// Spawns a renderer for an entity. Pulls from the <see cref="RendererPool"/>.
+    /// </summary>
+    [Category(LibraryData.CATEGORY)]
+    [Icon("visibility")]
+    [Hide]
     public class Renderer : EntityComponent {
         public RendererDefinition Data { get; set; }
 

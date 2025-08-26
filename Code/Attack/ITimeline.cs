@@ -6,6 +6,9 @@ using System.Text.Json.Serialization;
 using Sandbox;
 
 namespace MANIFOLD.BHLib {
+    /// <summary>
+    /// Interface for event timelines. Not meant to be used directly outside of the editor.
+    /// </summary>
     public interface ITimeline {
         public IReadOnlyList<AttackEvent> Events { get; }
         public Type EventType { get; }
@@ -16,6 +19,10 @@ namespace MANIFOLD.BHLib {
         public void Sort();
     }
     
+    /// <summary>
+    /// A timeline with events.
+    /// </summary>
+    /// <typeparam name="T">The type of event.</typeparam>
     public class Timeline<T> : ITimeline where T : AttackEvent {
         public const string TYPE_FIELD = "__type";
         
@@ -67,6 +74,10 @@ namespace MANIFOLD.BHLib {
         }
     }
 
+    /// <summary>
+    /// Allows for easy sampling of a timeline.
+    /// </summary>
+    /// <typeparam name="T">The type of event.</typeparam>
     public class TimelineSampler<T> where T : AttackEvent {
         private readonly Timeline<T> timeline;
 

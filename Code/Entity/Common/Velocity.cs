@@ -18,6 +18,12 @@ namespace MANIFOLD.BHLib.Components {
         }
     }
     
+    /// <summary>
+    /// Moves an entity every frame.
+    /// </summary>
+    [Category(LibraryData.CATEGORY + "/Transform")]
+    [Icon("speed")]
+    [Hide]
     public class Velocity : EntityComponent {
         public VelocityDefinition Data { get; set; }
 

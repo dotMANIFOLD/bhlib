@@ -5,6 +5,11 @@ using MANIFOLD.BHLib.Events;
 using Sandbox;
 
 namespace MANIFOLD.BHLib {
+    /// <summary>
+    /// Used to play attacks.
+    /// </summary>
+    [Category(LibraryData.CATEGORY)]
+    [Icon("stream")]
     public class AttackCaster : Component {
         public class Instance {
             private readonly AttackCaster caster;
@@ -47,9 +52,15 @@ namespace MANIFOLD.BHLib {
             }
         }
         
+        /// <summary>
+        /// Allows for easy access from editor tools. Also used to infer pooling capacities.
+        /// </summary>
         [Property]
         public List<AttackData> Attacks { get; set; } = new List<AttackData>();
 
+        /// <summary>
+        /// If used it will try to get an <see cref="ITarget"/> from it.
+        /// </summary>
         [Property]
         public GameObject Target {
             get => gameObjTarget;

@@ -14,6 +14,12 @@ namespace MANIFOLD.BHLib.Components {
         }
     }
     
+    /// <summary>
+    /// Rotates the entity every frame.
+    /// </summary>
+    [Category(LibraryData.CATEGORY + "/Transform")]
+    [Icon("360")]
+    [Hide]
     public class AngularVelocity : EntityComponent {
         public AngularVelocityDefiniton Data { get; set; }
 

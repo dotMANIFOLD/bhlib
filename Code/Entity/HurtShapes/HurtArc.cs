@@ -21,6 +21,12 @@ namespace MANIFOLD.BHLib.Components {
         }
     }
     
+    /// <summary>
+    /// Hurts targets within in arc.
+    /// </summary>
+    [Category(LibraryData.CATEGORY + "/Hurt Shapes")]
+    [Icon("signal_wifi_0_bar")]
+    [Hide]
     public class HurtArc : EntityComponent {
         public const float MIN_THICKNESS = 0.1f;
         

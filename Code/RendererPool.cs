@@ -4,6 +4,9 @@ using System.Linq;
 using Sandbox;
 
 namespace MANIFOLD.BHLib {
+    /// <summary>
+    /// Manages renderer pools.
+    /// </summary>
     public static class RendererPool {
         public class Pool {
             public readonly GameObject prefab;

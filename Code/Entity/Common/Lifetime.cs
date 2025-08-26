@@ -13,6 +13,12 @@ namespace MANIFOLD.BHLib.Components {
         }
     }
     
+    /// <summary>
+    /// Destroys the entity after a given time frame.
+    /// </summary>
+    [Category(LibraryData.CATEGORY + "/Common")]
+    [Icon("hourglass_empty")]
+    [Hide]
     public class Lifetime : EntityComponent {
         public LifetimeDefinition Data { get; set; }
 
