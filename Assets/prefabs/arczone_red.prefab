@@ -1,0 +1,114 @@
+{
+  "RootObject": {
+    "__guid": "c0626c53-988e-4e70-8ccf-b52f332a4a13",
+    "__version": 1,
+    "Flags": 0,
+    "Name": "arczone_red",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkInterpolation": true,
+    "NetworkOrphaned": 0,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "MANIFOLD.BHLib.ArcRenderer",
+        "__guid": "da7a49d4-1828-4051-9d5a-74881a2269e2",
+        "__enabled": true,
+        "Angle": 90,
+        "Centered": true,
+        "EndLength": 50,
+        "Model": {
+          "_type": "component",
+          "component_id": "3ef04a76-2b4f-4a04-8802-7f25514113f4",
+          "go": "3f8c53f6-ccc2-47df-8c36-c2a537c24828",
+          "component_type": "ModelRenderer"
+        },
+        "ModelRadius": 50,
+        "ModelRotationOffset": "0,180,0",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "StartLength": 30
+      }
+    ],
+    "Children": [
+      {
+        "__guid": "3f8c53f6-ccc2-47df-8c36-c2a537c24828",
+        "__version": 1,
+        "Flags": 0,
+        "Name": "Plane",
+        "Position": "0,0,1",
+        "Rotation": "0,0,1,-0.00000004371139",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.ModelRenderer",
+            "__guid": "3ef04a76-2b4f-4a04-8802-7f25514113f4",
+            "__enabled": true,
+            "BodyGroups": 18446744073709551615,
+            "CreateAttachments": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": "materials/arczone_red.vmat",
+            "Materials": null,
+            "Model": "models/dev/plane.vmdl",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "Off",
+            "Tint": "1,1,1,1"
+          }
+        ],
+        "Children": []
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": true,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": ""
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

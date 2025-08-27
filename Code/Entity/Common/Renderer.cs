@@ -23,10 +23,11 @@ namespace MANIFOLD.BHLib.Components {
         public RendererDefinition Data { get; set; }
 
         private GameObject obj;
+
+        public GameObject Held => obj;
         
         protected override void OnStart() {
             obj = RendererPool.Request(Data.Prefab);
-            obj.LocalTransform = global::Transform.Zero;
         }
         
         protected override void OnDestroy() {

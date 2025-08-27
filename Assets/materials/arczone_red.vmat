@@ -1,0 +1,8 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "shaders/arczone.shader"
+
+	g_vColor "[0.952941 0.027451 0.027451 1.000000]"
+}

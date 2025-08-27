@@ -29,18 +29,31 @@ namespace MANIFOLD.BHLib.Components {
     [Hide]
     public class HurtArc : EntityComponent {
         public const float MIN_THICKNESS = 0.1f;
+
+        private bool triedRender;
+        private ArcRenderer renderer;
+        private float additive;
         
         public HurtArcDefinition Data { get; set; }
 
-        private float additive;
+        public float RealEndDistance => Data.EndDistance + additive;
+
+        protected override void OnFixedUpdate() {
+            if (!triedRender) {
+                TryGetRenderer();
+                triedRender = true;
+            }
+            
+            base.OnFixedUpdate();
+        }
 
         public override void SimulateFrame(float deltaTime) {
             base.SimulateFrame(deltaTime);
-
+            
             additive += Data.DistanceVelocity * deltaTime;
             
             if (Target.IsValid()) CheckPhysics();
-            // UpdateModel();
+            if (renderer.IsValid()) UpdateModel();
         }
 
         public override void Simulate(float time) {
@@ -55,13 +68,12 @@ namespace MANIFOLD.BHLib.Components {
             
             Vector3 startDir = new Vector3(MathF.Cos(startRads), MathF.Sin(startRads), 0f);
             Vector3 endDir = new Vector3(MathF.Cos(endRads), MathF.Sin(endRads), 0f);
-            float realEndDistance = Data.EndDistance + additive;
-            float startDistance = MathF.Max(realEndDistance - Data.Thickness, 0);
+            float startDistance = MathF.Max(RealEndDistance - Data.Thickness, 0);
             
             Gizmo.Draw.Color = Color.Red;
-            Gizmo.Draw.Line(startDir * startDistance, startDir * realEndDistance);
-            Gizmo.Draw.Line(endDir * startDistance, endDir * realEndDistance);
-            DrawArc(startRads, endRads, realEndDistance);
+            Gizmo.Draw.Line(startDir * startDistance, startDir * RealEndDistance);
+            Gizmo.Draw.Line(endDir * startDistance, endDir * RealEndDistance);
+            DrawArc(startRads, endRads, RealEndDistance);
 
             if (Data.Thickness > 0 && !Data.Thickness.AlmostEqual(0)) {
                 if (startDistance > 0) {
@@ -73,15 +85,21 @@ namespace MANIFOLD.BHLib.Components {
             }
         }
 
+        private void TryGetRenderer() {
+            var indirect = GetComponent<Renderer>();
+            if (indirect.IsValid()) {
+                renderer = indirect.Held.GetComponent<ArcRenderer>();
+            }
+        }
+        
         private void CheckPhysics() {
             Vector3 toPlayer = Target.WorldPosition - WorldPosition;
             Vector3 localToPlayer = WorldRotation.Inverse * toPlayer;
-
-            float realEndDistance = Data.EndDistance + additive;
-            float startDistance = MathF.Max(realEndDistance - Data.Thickness, 0);
-            float realThickness = realEndDistance - startDistance;
+            
+            float startDistance = MathF.Max(RealEndDistance - Data.Thickness, 0);
+            float realThickness = RealEndDistance - startDistance;
             float halfThickness = realThickness * 0.5f;
-            float sampleLength = realEndDistance.LerpTo(startDistance, 0.5f);
+            float sampleLength = RealEndDistance.LerpTo(startDistance, 0.5f);
             
             float minAngle = (Data.Centered ? Data.Angle * -0.5f : 0).DegreeToRadian();
             float maxAngle = (Data.Centered ? Data.Angle * 0.5f : Data.Angle).DegreeToRadian();
@@ -124,12 +142,10 @@ namespace MANIFOLD.BHLib.Components {
         }
         
         private void UpdateModel() {
-            // float angle = Centered ? Angle * 0.5f : Angle;
-            // Model.LocalRotation = modelRotOffset * new Angles(0f, angle, 0f);
-            // Model.LocalScale = EndDistance / ModelRadius;
-            // Model.SceneObject.Batchable = false;
-            // Model.Attributes.Set("Arc", 1 - (Angle / 360f));
-            // Model.Attributes.Set("StartLength", 1 - (Thickness / EndDistance));
+            renderer.Angle = Data.Angle;
+            renderer.Centered = Data.Centered;
+            renderer.StartLength = RealEndDistance - Data.Thickness;
+            renderer.EndLength = RealEndDistance;
         }
 
         private (float left, float right) GetMargins(float left, float right, float margin) {
