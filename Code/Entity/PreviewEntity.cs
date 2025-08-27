@@ -16,12 +16,15 @@ namespace MANIFOLD.BHLib {
 
         public void Initialize() {
             GameObject.Flags |= GameObjectFlags.EditorOnly;
-            components = GetComponents<EntityComponent>().ToArray();
+            GetAllComponents();
             RecordInitialTransform();
         }
         
         public void GetAllComponents() {
             components = GetComponents<EntityComponent>().ToArray();
+            foreach (var c in components) {
+                c.Target = null;
+            }
         }
         
         public void RecordInitialTransform() {

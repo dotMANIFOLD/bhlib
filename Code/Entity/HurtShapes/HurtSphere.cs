@@ -33,7 +33,7 @@ namespace MANIFOLD.BHLib.Components {
         public override void SimulateFrame(float deltaTime) {
             base.SimulateFrame(deltaTime);
             
-            UpdatePhysics();
+            if (Target.IsValid()) UpdatePhysics();
         }
 
         private void UpdatePhysics() {

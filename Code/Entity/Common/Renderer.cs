@@ -31,7 +31,9 @@ namespace MANIFOLD.BHLib.Components {
         }
         
         protected override void OnDestroy() {
-            RendererPool.Release(obj);
+            if (obj.IsValid()) {
+                RendererPool.Release(obj);
+            }
         }
 
         protected override void OnPreRender() {

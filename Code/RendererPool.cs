@@ -72,6 +72,7 @@ namespace MANIFOLD.BHLib {
         }
 
         public static GameObject Request(GameObject prefab) {
+            if (Game.ActiveScene.IsEditor) return null; // return immediately in editor mode
             if (!pools.ContainsKey(prefab)) {
                 throw new InvalidOperationException("No pool was created for this prefab");
             }
