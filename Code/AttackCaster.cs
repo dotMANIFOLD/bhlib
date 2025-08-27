@@ -93,21 +93,8 @@ namespace MANIFOLD.BHLib {
         }
 
         protected override void OnStart() {
-            Dictionary<GameObject, int> cache = new Dictionary<GameObject, int>();
-            foreach (var attack in Attacks) {
-                foreach (var renderer in attack.RenderPoolingData) {
-                    if (cache.TryGetValue(renderer.Prefab, out var capacity)) {
-                        int newCapacity = Math.Max(capacity, renderer.UseCount);
-                        cache[renderer.Prefab] = newCapacity;
-                    } else {
-                        cache.Add(renderer.Prefab, renderer.UseCount);
-                    }
-                }
-            }
-
-            foreach (var pair in cache) {
-                RendererPool.CreatePool(pair.Key, (pair.Value * 1.5f).CeilToInt());
-            }
+            RealTarget = Target.GetComponent<ITarget>();
+            CreatePools();
         }
 
         protected override void OnFixedUpdate() {
@@ -129,12 +116,31 @@ namespace MANIFOLD.BHLib {
         }
         
         // UTILITY
+        private void CreatePools() {
+            Dictionary<GameObject, int> cache = new Dictionary<GameObject, int>();
+            foreach (var attack in Attacks) {
+                foreach (var renderer in attack.RenderPoolingData) {
+                    if (cache.TryGetValue(renderer.Prefab, out var capacity)) {
+                        int newCapacity = Math.Max(capacity, renderer.UseCount);
+                        cache[renderer.Prefab] = newCapacity;
+                    } else {
+                        cache.Add(renderer.Prefab, renderer.UseCount);
+                    }
+                }
+            }
+
+            foreach (var pair in cache) {
+                RendererPool.CreatePool(pair.Key, (pair.Value * 1.5f).CeilToInt());
+            }
+        }
+        
         private GameObject CreateEntity(EntityData data, Transform localTransform, float? simulate = null) {
             GameObject go = Scene.CreateObject();
             go.WorldTransform = LocalTransform.ToWorld(localTransform);
             foreach (var component in data.Components) {
                 if (!component.Enabled) continue;
                 var inst = component.Create(go);
+                inst.Owner = GameObject;
                 inst.Target = RealTarget;
                 if (simulate.HasValue) {
                     inst.SimulateFrame(simulate.Value);

@@ -34,10 +34,6 @@ namespace MANIFOLD.BHLib.Components {
 
         private float additive;
 
-        protected override void OnStart() {
-            base.OnStart();
-        }
-
         public override void SimulateFrame(float deltaTime) {
             base.SimulateFrame(deltaTime);
 
@@ -110,7 +106,17 @@ namespace MANIFOLD.BHLib.Components {
             sampleSize.y = sampleSize.y.LerpTo(MIN_THICKNESS, 1 - sizeFactor);
 
             var result = Scene.Trace.Box(sampleSize, samplePos, samplePos).Rotated(sampleRot).WithTag("player").Run();
-            ProcessTrace(result);
+            var wasTarget = CheckForTarget(result);
+            if (wasTarget) {
+                var successful = Target.Hurt(new DamageInfo() {
+                    attacker = GameObject,
+                    damage = Data.Damage,
+                    impulseDirection = (Target.WorldPosition - samplePos).WithZ(0).Normal
+                });
+                if (successful && Data.DestroyOnHurt) {
+                    GameObject.Destroy();
+                }
+            }
             
             // DebugOverlay.Box(0, Thickness, Color.Red, Time.Delta, new Transform(samplePos, WorldRotation * sampleRot));
             DebugOverlay.Sphere(new Sphere(WorldPosition + (sampleDir * sampleLength), 8), Color.Blue, Time.Delta);

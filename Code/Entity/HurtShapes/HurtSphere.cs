@@ -38,7 +38,17 @@ namespace MANIFOLD.BHLib.Components {
 
         private void UpdatePhysics() {
             var result = Scene.Trace.Sphere(Data.Radius, WorldPosition, WorldPosition).Run();
-            ProcessTrace(result);
+            var wasTarget = CheckForTarget(result);
+            if (wasTarget) {
+                var successful = Target.Hurt(new DamageInfo() {
+                    attacker = GameObject,
+                    damage = Data.Damage,
+                    impulseDirection = (Target.WorldPosition - WorldPosition).WithZ(0).Normal
+                });
+                if (successful && Data.DestroyOnHurt) {
+                    GameObject.Destroy();
+                }
+            }
         }
     }
 }

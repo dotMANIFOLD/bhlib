@@ -29,12 +29,11 @@ namespace MANIFOLD.BHLib {
             SimulateFrame(time);
         }
         
-        protected virtual void ProcessTrace(SceneTraceResult result) {
-            if (result.Hit) {
-                if (result.GameObject.Tags.Has("player")) {
-                    Log.Info("player should be hurt");
-                }
-            }
+        protected virtual bool CheckForTarget(SceneTraceResult result) {
+            if (!result.Hit) return false;
+            if (result.GameObject == Target.GameObject) return true;
+            if (result.GameObject.GetComponentInParent<ITarget>() == Target) return true;
+            return false;
         }
     }
 }

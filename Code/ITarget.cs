@@ -6,10 +6,12 @@ namespace MANIFOLD.BHLib {
     /// Designed to be used on a component.
     /// </summary>
     public interface ITarget : IValid {
+        public GameObject GameObject { get; }
+        
         public Transform WorldTransform { get; }
         public Vector3 WorldPosition { get; }
         public Rotation WorldRotation { get; }
 
-        public void Hurt(int damage);
+        public bool Hurt(DamageInfo info);
     }
 }
