@@ -18,9 +18,20 @@ namespace MANIFOLD.BHLib {
             private TimelineSampler<SpawnEvent> spawnSampler;
             private TimelineSampler<CasterEvent> casterSampler;
 
+            private bool durationPassed;
+
             public AttackData Attack => attack;
             public float Time => spawnSampler.Time;
             public float NormalizedTime => spawnSampler.Time / attack.Duration;
+
+            /// <summary>
+            /// Called when we pass the duration of this attack.
+            /// </summary>
+            public event Action<Instance> OnEnded;
+            /// <summary>
+            /// Called when all events have been triggered.
+            /// </summary>
+            public event Action<Instance> OnSequenceEnded; 
             
             public Instance(AttackCaster caster, AttackData data) {
                 this.caster = caster;
@@ -48,7 +59,18 @@ namespace MANIFOLD.BHLib {
                     }
                 }
 
-                return spawnSampler.Time >= attack.Duration;
+                var passed = spawnSampler.Time >= attack.Duration;
+                if (passed && !durationPassed) {
+                    OnEnded?.Invoke(this);
+                    durationPassed = true;
+                }
+
+                // Always use the calculated duration since we want to play all events.
+                bool sequenceEnded = spawnSampler.Time >= attack.CalculatedDuration;
+                if (sequenceEnded) {
+                    OnSequenceEnded?.Invoke(this);
+                }
+                return sequenceEnded;
             }
         }
         
@@ -106,13 +128,22 @@ namespace MANIFOLD.BHLib {
                 }
             }
         }
-
+        
+        // ATTACK API
         public void PlayAttack(AttackData data) {
-            PlayAttack(data, WorldTransform);
+            instances.Add(new Instance(this, data));
         }
 
-        public void PlayAttack(AttackData data, Transform transform) {
-            instances.Add(new Instance(this, data));
+        public void StopAttack(Instance instance) {
+            if (!instances.Contains(instance)) {
+                throw new ArgumentException("Instance does not belong to this caster.", nameof(instance));
+            }
+            
+            instances.Remove(instance);
+        }
+
+        public void StopAllAttacks() {
+            instances.Clear();
         }
         
         // UTILITY

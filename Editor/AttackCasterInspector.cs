@@ -14,18 +14,26 @@ namespace MANIFOLD.BHLib.Editor {
         public class AttackProgress : Widget {
             public const float BAR_MARGIN = 2;
             public const float BAR_SIZE = 30;
-            
-            private readonly AttackCaster.Instance instance;
-            private Label label;
 
-            public AttackProgress(AttackCaster.Instance instance, Widget parent = null) : base(parent) {
+            private readonly AttackCaster caster;
+            private readonly AttackCaster.Instance instance;
+            private readonly Label label;
+
+            public AttackProgress(AttackCaster caster, AttackCaster.Instance instance, Widget parent = null) : base(parent) {
+                this.caster = caster;
                 this.instance = instance;
                 Layout = Layout.Column();
                 Layout.Margin = new Margin(8, 0);
                 
-                FixedHeight = 30;
+                FixedHeight = 40;
+
+                var row = Layout.AddRow();
+                label = row.Add(new Label(instance.Attack.ResourceName ?? "Embedded Resource"));
+                row.AddStretchCell();
+                row.Add(new Button("Stop") { Clicked = () => {
+                    caster.StopAttack(instance);
+                }});
                 
-                label = Layout.Add(new Label(instance.Attack.ResourceName ?? "Embedded Resource"));
                 Layout.AddStretchCell();
 
                 VerticalSizeMode = SizeMode.CanGrow;
@@ -148,7 +156,7 @@ namespace MANIFOLD.BHLib.Editor {
 
             for (int i = 0; i < Target.Instances.Count; i++) {
                 var inst = Target.Instances[i];
-                instanceListLayout.Add(new AttackProgress(inst));
+                instanceListLayout.Add(new AttackProgress(Target, inst));
             }
         }
 
