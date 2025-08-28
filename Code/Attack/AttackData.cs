@@ -7,7 +7,7 @@ namespace MANIFOLD.BHLib {
     /// <summary>
     /// Stores all kinds of events for an attack.
     /// </summary>
-    [GameResource("Attack", "bhatk", "BH Attack Sequence", Category = LibraryData.CATEGORY, Icon = "stream", IconBgColor = LibraryData.BG_COLOR)]
+    [AssetType(Name = "Attack", Category = LibraryData.CATEGORY, Extension = "bhatk")]
     public class AttackData : GameResource {
         public class RendererData {
             public GameObject Prefab { get; set; }
@@ -33,5 +33,9 @@ namespace MANIFOLD.BHLib {
         /// Automatically populated during each save. It contains statistics for each renderer used.
         /// </summary>
         public List<RendererData> RenderPoolingData { get; set; } = new List<RendererData>();
+
+        protected override Bitmap CreateAssetTypeIcon(int width, int height) {
+            return CreateSimpleAssetTypeIcon("stream", width, height, LibraryData.BG_COLOR);
+        }
     }
 }

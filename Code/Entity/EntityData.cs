@@ -8,7 +8,7 @@ namespace MANIFOLD.BHLib {
     /// <summary>
     /// Stores a list of <see cref="EntityComponent"/>s.
     /// </summary>
-    [GameResource("Entity Data", "bhent", "BH Entity data", Category = LibraryData.CATEGORY, Icon = "my_location", IconBgColor = LibraryData.BG_COLOR)]
+    [AssetType(Name = "Entity Data", Category = LibraryData.CATEGORY, Extension = "bhent")]
     public class EntityData : GameResource {
         public const string TYPE_FIELD = "__type";
         
@@ -34,6 +34,10 @@ namespace MANIFOLD.BHLib {
                     Components.Add(deserialized);
                 }
             }
+        }
+
+        protected override Bitmap CreateAssetTypeIcon(int width, int height) {
+            return CreateSimpleAssetTypeIcon("my_location", width, height, LibraryData.BG_COLOR);
         }
     }
 }
